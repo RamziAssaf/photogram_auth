@@ -15,17 +15,38 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">
-              <a href="/users/<%= photo.user_id %>"><%= photo.user.username %></a>
-              <small><%= time_ago_in_words(Time.now) %></small>
+              <a href="/users/<%= photo.user_id %>"><%= photo.user %></a> 
+              <small><%= time_ago_in_words(photo.created_at) + " ago" %></small>
             </h3>
           </div>
 
           <div class="panel-body">
             <td><a href="/photos/<%= photo.id %>"><img src="<%= photo.image %>" class="img-responsive"></a></td>
+            <!-- Like -->
+            <% if photo.fans.include?(current_user) == false %>
+              <td>          
+                <a href="/create_like"><i class="fa fa-heart-o"></i></a><%= photo.fans %> 
+                <form method="post">
+                  <!-- Hidden input for authenticity token to protect from forgery -->
+                    <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+                  <!-- Label and input for user_id -->
+                    <div class="form-group">
+                      <input type="hidden" id="user_id" name="user_id" class="form-control" value="<%= current_user.id %>">
+                    </div>
+                  <!-- Label and input for photo_id -->
+                    <div class="form-group">
+                      <input type="hidden" id="photo_id" name="photo_id" class="form-control" value="<%= photo.id %>">
+                    </div>
+                </form>
+              </td>
+
+            <% else %>
+              <td><a href="/delete_like"><i class="fa fa-heart"></i></a><%= photo.fans %></td>
+            <% end %>
             <td>
               <% photo.comments.each do |comment| %>
                 <dl>
-                  <dd><a href="/users/<%= comment.user_id %>"><%= comment.user.username + " " %></a><small class="text-muted"><%= time_ago_in_words(Time.now) %></small></dd>
+                  <dd><a href="/users/<%= comment.user_id %>"><%= comment.user.username + " " %></a><small class="text-muted"><%= time_ago_in_words(comment.created_at) + " ago" %></small></dd>
                   <dd><%= comment.body %></dd>
                 </dl>
               <% end %>

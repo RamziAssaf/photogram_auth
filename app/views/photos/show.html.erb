@@ -7,7 +7,7 @@
         <div class="panel-heading">
           <h3 class="panel-title">
             <a href="/users/<%= @photo.user_id %>"><%= @photo.user.username %></a>
-            <small><%= time_ago_in_words(Time.now) %></small>
+            <small><%= time_ago_in_words(@photo.created_at) + " ago" %></small>
           </h3>
         </div>
         <div class="panel-body">
@@ -15,7 +15,7 @@
           <td>
             <% @photo.comments.each do |comment| %>
             <dl>
-              <dd><a href="/users/<%= comment.user_id %>"><%= comment.user.username + " " %></a><small class="text-muted"><%= time_ago_in_words(Time.now) %></small></dd>
+              <dd><a href="/users/<%= comment.user_id %>"><%= comment.user.username + " " %></a><small class="text-muted"><%= time_ago_in_words(comment.created_at) + " ago" %></small></dd>
               <dd><%= comment.body %></dd>
             </dl>
             <% end %>
